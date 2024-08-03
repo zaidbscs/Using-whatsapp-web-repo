@@ -3,7 +3,7 @@ const qrcode = require('qrcode-terminal');
 
 // Create a new client instance
 const client = new Client({
-    authStrategy: new LocalAuth()
+    authStrategy: new LocalAuth() // This should handle session storage
 });
 
 // Generate and display QR code
@@ -18,9 +18,22 @@ client.on('ready', () => {
 
 // Handle incoming messages
 client.on('message', message => {
-    if (message.body.toLowerCase() === 'hi') {
+    const lowerCaseBody = message.body.toLowerCase();
+    const startTime = Date.now(); // Record the start time
+
+    if (lowerCaseBody === 'hi') {
         message.reply('How may I help you?');
-    }
+    } else if (lowerCaseBody === 'hello') {
+        message.reply('Hello! How can I assist you today?');
+    } else if (lowerCaseBody === 'bye') {
+        message.reply('Goodbye! Have a great day!');
+    } else if (lowerCaseBody === 'info') {
+        message.reply('I am a bot created to help you with basic queries.');
+    } else if (lowerCaseBody === 'ping') {
+        const responseTime = Date.now() - startTime; // Calculate the response time
+        message.reply(`pong ${responseTime}ms`);
+    } 
+    // If the message doesn't match any condition, do nothing (no reply)
 });
 
 // Initialize the client
