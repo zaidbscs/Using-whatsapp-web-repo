@@ -1,16 +1,22 @@
-const { WAConnection } = require('@adiwajshing/baileys');
-const fs = require('fs');
+
+
+const { makeWASocket, useSingleFileAuthState } = require('@adiwajshing/baileys');
+const { state, saveState } = useSingleFileAuthState('auth_info.json');
 
 async function connectToWhatsApp() {
-    const conn = new WAConnection();
-    conn.on('qr', qr => {
-        console.log('Scan this QR code with WhatsApp:', qr);
+    const conn = makeWASocket({ auth: state });
+    
+    conn.ev.on('creds.update', saveState);
+    
+    conn.ev.on('connection.update', update => {
+        const { connection, qr } = update;
+        if (qr) {
+            console.log('Scan this QR code with WhatsApp:', qr);
+        } else if (connection === 'open') {
+            console.log('Connection established!');
+        }
     });
-    conn.on('open', () => {
-        const authInfo = conn.base64EncodedAuthInfo();
-        fs.writeFileSync('auth_info.json', JSON.stringify(authInfo, null, '\t'));
-        console.log('Connection established!');
-    });
+
     await conn.connect();
 }
 
