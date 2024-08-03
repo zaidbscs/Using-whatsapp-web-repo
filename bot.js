@@ -18,22 +18,25 @@ client.on('ready', () => {
 
 // Handle incoming messages
 client.on('message', message => {
-    const lowerCaseBody = message.body.toLowerCase();
-    const startTime = Date.now(); // Record the start time
+    const prefix = '+';
+    if (message.body.startsWith(prefix)) {
+        const lowerCaseBody = message.body.substring(1).toLowerCase(); // Remove prefix and convert to lowercase
+        const startTime = Date.now(); // Record the start time
 
-    if (lowerCaseBody === 'hi') {
-        message.reply('How may I help you?');
-    } else if (lowerCaseBody === 'hello') {
-        message.reply('Hello! How can I assist you today?');
-    } else if (lowerCaseBody === 'bye') {
-        message.reply('Goodbye! Have a great day!');
-    } else if (lowerCaseBody === 'info') {
-        message.reply('I am a bot created to help you with basic queries.');
-    } else if (lowerCaseBody === 'ping') {
-        const responseTime = Date.now() - startTime; // Calculate the response time
-        message.reply(`pong ${responseTime}ms`);
-    } 
-    // If the message doesn't match any condition, do nothing (no reply)
+        if (lowerCaseBody === 'hi') {
+            message.reply('How may I help you?');
+        } else if (lowerCaseBody === 'hello') {
+            message.reply('Hello! How can I assist you today?');
+        } else if (lowerCaseBody === 'bye') {
+            message.reply('Goodbye! Have a great day!');
+        } else if (lowerCaseBody === 'info') {
+            message.reply('I am a bot created to help you with basic queries.');
+        } else if (lowerCaseBody === 'ping') {
+            const responseTime = Date.now() - startTime; // Calculate the response time
+            message.reply(`pong ${responseTime}ms`);
+        }
+        // If the message doesn't match any condition, do nothing (no reply)
+    }
 });
 
 // Initialize the client
